@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>何でもスタジオ</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* ローディング画面 */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s;
+            font-family: "Arial", sans-serif;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            color: #4CAF50;
+        }
+            /* フェードアウト */
+            #loading.fade-out {
+                opacity: 0;
+                visibility: hidden;
+            }
+        /* タイピングカーソル */
+        .typing::after {
+            content: '|';
+            animation: blink 0.6s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% {
+                opacity: 1;
+            }
+
+            51%, 100% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ローディング画面 -->
+    <div id="loading" class="typing"></div>
+
+    <header>
+        <a href="index.html">
+            <img src="https://imageusercontent.f5.si/image/logo.png" alt="何でもスタジオ ロゴ" class="logo" />
+        </a>
+        <nav>
+            <a href="index.html">ホーム</a>
+            <a href="rules.html">ルール</a>
+            <a href="contact.html">お問い合わせ</a>
+            <a href="about.html">運営情報</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>何でもスタジオのサイトへようこそ！</h1>
+        <p>何でもスタジオはみんなが自由に交流できる場所です。楽しく安心して過ごせるよう、ルールを守ってご利用ください。</p>
+        <div class="test">
+            <a href="https://scratch.mit.edu/studios/50760042" class="button12">スタジオに飛ぶ</a>
+        </div>
+
+        <section>
+            <h2>特徴</h2>
+            <ul>
+                <li>初心者歓迎！わからないことは気軽に質問OK</li>
+                <li>多様なトピックで自由に会話が楽しめます</li>
+                <li>みんなで作るコミュニティを大切にしています</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>参加方法</h2>
+            <p>まずはルールページをお読みいただき、マナーを守って参加してください。</p>
+            <p><a href="rules.html">ルールページへ</a></p>
+        </section>
+    </main>
+
+    <script>
+        // タイピング効果
+        const text = "何でもスタジオ";
+        let index = 0;
+        const loadingEl = document.getElementById("loading");
+
+        function typeEffect() {
+            if (index < text.length) {
+                loadingEl.textContent += text.charAt(index);
+                index++;
+                setTimeout(typeEffect, 150);
+            }
+        }
+        typeEffect();
+
+        // ページ完全読み込み後にフェードアウト
+        window.addEventListener("load", function () {
+            setTimeout(() => {
+                loadingEl.classList.add("fade-out");
+            }, 800); // タイピングが終わって少し待ってから消える
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
