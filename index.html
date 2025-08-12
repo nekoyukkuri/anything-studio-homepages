@@ -86,20 +86,20 @@
     let index = 0;
     const loadingEl = document.getElementById("loading");
 
-    function typeEffect() {
-      if (index < text.length) {
-        loadingEl.textContent += text.charAt(index);
-        index++;
-        setTimeout(typeEffect, 150);
-      } else {
-        // タイピング完了後にカーソルを消す
-        loadingEl.classList.remove('typing');
-        // 1秒待ってからフェードアウト開始
-        setTimeout(() => {
-          loadingEl.classList.add("fade-out");
-        }, 1000);
-      }
-    }
+function typeEffect() {
+  if (index < text.length) {
+    // 今まで表示した文字を一旦全部消してから再描画する形にする
+    loadingEl.textContent = text.substring(0, index + 1);
+    index++;
+    setTimeout(typeEffect, 150);
+  } else {
+    loadingEl.classList.remove('typing');
+    setTimeout(() => {
+      loadingEl.classList.add("fade-out");
+    }, 1000);
+  }
+}
+
 
     // ページ読み込み後にタイピング開始
     window.addEventListener("load", () => {
@@ -117,3 +117,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
