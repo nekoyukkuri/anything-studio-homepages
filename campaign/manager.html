@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Scratch 認証システム</title>
+<style>
+  body {
+    font-family: "Segoe UI", sans-serif;
+    background: #f4f6fb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 350px;
+    text-align: center;
+  }
+  h2 {
+    color: #333;
+    margin-bottom: 15px;
+  }
+  input {
+    padding: 10px;
+    width: 90%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+  button {
+    padding: 10px 20px;
+    background: #ffab1a;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  button:hover {
+    background: #ff9900;
+  }
+  .link-btn {
+    background: #2d9bf0;
+    margin-top: 10px;
+  }
+  .link-btn:hover {
+    background: #2088d4;
+  }
+  .code-box {
+    background: #f1f1f1;
+    padding: 8px;
+    border-radius: 8px;
+    font-family: monospace;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .success {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  .error {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h2>Scratch アカウント認証</h2>
+    <input type="text" id="username" placeholder="Scratchユーザー名">
+    <div>
+      <button onclick="generateCode()">認証コード生成</button>
+    </div>
+    <div id="codeContainer" style="display:none;">
+      <p>以下のコードを作品コメント欄に投稿してください：</p>
+      <div class="code-box" id="authCode"></div>
+      <br>
+      <button class="link-btn" onclick="window.open('https://scratch.mit.edu/projects/1204819180/', '_blank')">作品に飛ぶ</button>
+      <br><br>
+      <button onclick="verify()">認証する</button>
+    </div>
+    <div id="message"></div>
+  </div>
+
+<script>
+let generatedCode = "";
+
+function generateCode() {
+  const username = document.getElementById("username").value.trim();
+  if (!username) {
+    alert("ユーザー名を入力してください");
+    return;
+  }
+  generatedCode = Math.random().toString(36).slice(-8); // 8文字コード
+  document.getElementById("authCode").textContent = generatedCode;
+  document.getElementById("codeContainer").style.display = "block";
+}
+
+function verify() {
+  const username = document.getElementById("username").value.trim();
+  fetch("https://scratch.hurutusan.workers.dev/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username: username, code: generatedCode })
+  })
+  .then(res => res.json())
+  .then(data => {
+    const btn = document.querySelector("button[onclick='verify()']");
+    const msgEl = document.getElementById("message");
+    if (data.success) {
+      msgEl.innerHTML = `<p class="success">✅ 認証成功！</p>`;
+      btn.disabled = true;           // ボタン無効化
+      btn.style.opacity = 0.6;       // ついでに見た目も変更
+      btn.style.cursor = "not-allowed";
+    } else {
+      msgEl.innerHTML = `<p class="error">❌ 認証失敗…コメントを確認してください</p>`;
+    }
+  })
+  .catch(() => {
+    document.getElementById("message").innerHTML = `<p class="error">エラーが発生しました</p>`;
+  });
+}
+</script>
+</body>
+</html>
